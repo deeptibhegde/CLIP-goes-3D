@@ -15,7 +15,7 @@ for per_samples in {10,20,30,50}
 
 do 
 
-     CUDA_VISIBLE_DEVICES=${GPUS} python main_BERT.py  --per_samples $per_samples  --exp_name scarce_clasp_$per_samples ${PY_ARGS}  
+     CUDA_VISIBLE_DEVICES=${GPUS} python main.py  --per_samples $per_samples  --exp_name scarce_clasp_$per_samples ${PY_ARGS}  
 
 
 
