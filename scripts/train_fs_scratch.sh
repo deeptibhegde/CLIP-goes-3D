@@ -16,7 +16,7 @@ while [ $i -ne 10 ]
 
 do 
 
-     CUDA_VISIBLE_DEVICES=${GPUS} python main_BERT.py  --way 40 --shot 16 --fold $i --clip  --exp_name scratch_fs_16s_$i ${PY_ARGS} 
+     CUDA_VISIBLE_DEVICES=${GPUS} python main.py  --way 40 --shot 16 --fold $i --clip  --exp_name scratch_fs_16s_$i ${PY_ARGS} 
 
      i=$(($i+1))
 
