@@ -36,8 +36,22 @@ CUDA 11.6
    pip install git+https://github.com/openai/CLIP.git
    ```
 
-   Install PointNet ops from [here](https://github.com/erikwijmans/Pointnet2_PyTorch)
+   Install [PointNet ops](https://github.com/erikwijmans/Pointnet2_PyTorch)
 
+   
+   ```
+   cd third_party/Pointnet2_PyTorch
+   pip install -e .
+   ```
+   
+   Install [PyGeM](https://mathlab.github.io/PyGeM/)
+   
+   ```
+   cd third_party/PyGeM
+   python setup.py install
+   ```
+   
+   
    ```
    pip install --upgrade https://github.com/unlimblue/KNN_CUDA/releases/download/0.2/KNN_CUDA-0.2-py3-none-any.whl
    ```
