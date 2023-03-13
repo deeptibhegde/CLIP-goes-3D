@@ -93,6 +93,10 @@ CUDA 11.6
   │   │   │── ...
 
   ```
+## Pre-training
 
+## Zero-shot Inference
+
+## Fine-tuning
 
 
