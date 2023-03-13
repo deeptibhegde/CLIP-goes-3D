@@ -1,6 +1,6 @@
 # CLIP-goes-3D
 
-The official code release of CLIP goes 3D:Leveraging Prompt Tuning for Language Grounded 3D Recognition
+The official code release of CLIP goes 3D: Leveraging Prompt Tuning for Language Grounded 3D Recognition
 
 ![image](docs/teaser.png)
 
@@ -63,7 +63,7 @@ CUDA 11.6
 
     Save and unzip the above datasets.
   
- 2. Render views of textured CAD models of ShapeNet using [this](https://github.com/nv-tlabs/GET3D/blob/master/render_shapenet_data/README.md) repository. Such that the data is organized as 
+ 2. Render views of textured CAD models of ShapeNet using [this](https://github.com/nv-tlabs/GET3D/blob/master/render_shapenet_data/README.md) repository such that the data is organized as 
 
   ```
   ├── data (this may be wherever you choose)
