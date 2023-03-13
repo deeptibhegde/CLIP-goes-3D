@@ -35,21 +35,6 @@ CUDA 11.6
    ```
    pip install git+https://github.com/openai/CLIP.git
    ```
-
-   Install [PointNet ops](https://github.com/erikwijmans/Pointnet2_PyTorch)
-
-   
-   ```
-   cd third_party/Pointnet2_PyTorch
-   pip install -e .
-   ```
-   
-   Install [PyGeM](https://mathlab.github.io/PyGeM/)
-   
-   ```
-   cd third_party/PyGeM
-   python setup.py install
-   ```
    
    
    ```
@@ -65,6 +50,20 @@ CUDA 11.6
    ```
    cd ./models/SLIP/pytorch-image-models
    pip install -e .
+   ```
+3. Install [PointNet ops](https://github.com/erikwijmans/Pointnet2_PyTorch)
+
+   
+   ```
+   cd third_party/Pointnet2_PyTorch
+   pip install -e .
+   ```
+   
+4.  Install [PyGeM](https://mathlab.github.io/PyGeM/)
+   
+   ```
+   cd third_party/PyGeM
+   python setup.py install
    ```
 
 ## Dataset set-up
