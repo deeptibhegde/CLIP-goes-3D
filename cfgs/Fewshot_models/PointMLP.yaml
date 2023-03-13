@@ -1,0 +1,43 @@
+optimizer : {
+  type: SGD,
+  kwargs: {
+  lr : 0.02, 
+  weight_decay : 0.0002,
+  momentum : 0.9
+}}
+
+scheduler: {
+  type: CosLR,
+  kwargs: {
+    epochs: 300,
+    initial_epochs : 10,
+    min_lr : 0.005
+}}
+
+dataset : {
+  train : { _base_: cfgs/dataset_configs/ModelNet40FewShot.yaml, 
+            others: {subset: 'train',bs: 32}},
+  val : { _base_: cfgs/dataset_configs/ModelNet40FewShot.yaml, 
+            others: {subset: 'test', bs: 32}},
+  test : { _base_: cfgs/dataset_configs/ModelNet40.yaml, 
+            others: {subset: 'test', bs: 32}}}
+            
+model : {
+  NAME: PointMLP,
+  trans_dim: 384, 
+  depth: 12, 
+  drop_path_rate: 0.1, 
+  cls_dim: 40, 
+  num_heads: 6,
+  group_size: 32, 
+  num_group: 64, 
+  encoder_dims: 256,
+}
+npoints: 8192
+total_bs : 32
+step_per_update : 1
+max_epoch : 300
+grad_norm_clip : 10
+
+ckpt: '/data/dhegde1/code/CLASP_pb/Point-BERT/PointMLP.pth'
+consider_metric: CDL1

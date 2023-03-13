@@ -1,0 +1,4 @@
+NAME: ShapeNet
+DATA_PATH: /data/dhegde1/data/3D/ShapeNet55
+N_POINTS: 8192
+PC_PATH: /data/dhegde1/data/3D/ShapeNet55/shapenet_pc
