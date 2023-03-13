@@ -44,7 +44,7 @@ conda env create -f environment.yml
   ```
   cd ./extensions/chamfer_dist
   python setup.py develop
-```
+  ```
 
 2. Build modified timm from scratch
 
@@ -52,4 +52,35 @@ conda env create -f environment.yml
   cd ./models/SLIP/pytorch-image-models
   pip install -e .
   ```
+
+## Dataset set-up
+
+1. Download point cloud datasets for pre-training and fine-tuning.
+
+- Download [ShapeNetCore v2](https://shapenet.org/).
+- Download [ModelNet](https://shapenet.cs.stanford.edu/media/modelnet40_normal_resampled.zip)
+- Download [ScanObjectNN](https://hkust-vgd.github.io/scanobjectnn/)
+
+  Save and unzip the above datasets such that they are organized as 
+
+  ```
+  ├── data (this may be wherever you choose)
+  │   ├── modelnet40_normal_resampled
+  │   │   │── modelnet10/40_shape_names.txt
+  │   │   │── modelnet10/40_train/test.txt 
+  │   │   │── airplane
+  │   │   │── ....
+  │   │   │── laptop 
+  │   ├── ShapeNet55
+  │   │   │── train.txt
+  │   │   │── test.txt
+  │   │   │── shapenet_pc
+  │   │   │   |── 03211117-62ac1e4559205e24f9702e673573a443.npy
+  │   │   │   |── .....
+  │   ├── ScanObjectNN
+  │   │   │── main_split
+  │   │   │── ....
+
+  ```
+
 
