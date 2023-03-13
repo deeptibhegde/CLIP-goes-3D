@@ -107,7 +107,7 @@ CUDA 11.6
 
   ```
 ## Pre-training
-0. Change data paths to relevant locations in ```cfgs/dataset_configs/```
+- Change data paths to relevant locations in ```cfgs/dataset_configs/```
 
 - Pre-train PointTransformer on ShapeNet under the CG3D framework:
 
@@ -117,6 +117,11 @@ CUDA 11.6
     ```
     
 - Pre-train PointMLP on ShapeNet under the CG3D framework:
+
+```
+    python main_BERT.py  --exp_name {NAME FOR EXPT} --config cfgs/PRETRAIN_models/PointMLP_VPT.yaml  --pretrain    --out_dir {OUTPUT DIR PATH}  --text --image --clip --VL SLIP --visual_prompting --npoints 8192
+
+    ```
 
 ## Zero-shot Inference
 
