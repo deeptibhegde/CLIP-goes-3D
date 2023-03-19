@@ -1,10 +1,10 @@
 # CLIP-goes-3D
 
-The official code release of CLIP goes 3D: Leveraging Prompt Tuning for Language Grounded 3D Recognition
+Official code for the paper "CLIP goes 3D: Leveraging Prompt Tuning for Language Grounded 3D Recognition"
 
 ![image](docs/teaser.png)
 
-This repository includes the pre-trained models, evaluation and training codes for pre-training, zero-shot, and fine-tuning experiments. It is built on the [Point-BERT](https://github.com/lulutang0608/Point-BERT) codebase. Please see the end of this document for a full list of code references.
+This repository includes the pre-trained models, evaluation and training codes for pre-training, zero-shot, and fine-tuning experiments of CG3D. It is built on the [Point-BERT](https://github.com/lulutang0608/Point-BERT) codebase. Please see the end of this document for a full list of code references.
 
 ## Environment set-up
 
@@ -126,5 +126,7 @@ CUDA 11.6
 ## Zero-shot Inference
 
 ## Fine-tuning
+
+### Citation
 
 
