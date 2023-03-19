@@ -123,10 +123,6 @@ CUDA 11.6
 
     ```
 
-## Zero-shot Inference
 
-## Fine-tuning
-
-### Citation
 
 
