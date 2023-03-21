@@ -24,6 +24,11 @@ CUDA 11.6
 (OR)
 
 1. Install dependencies manually.
+
+   ```
+   conda create -n cg3d
+   ```
+
    ``` 
    pip install ftfy tqdm h5py geoopt einops open3d pyyaml regex tensorboardX termcolor yacs
 
