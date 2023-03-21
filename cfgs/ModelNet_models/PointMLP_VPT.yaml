@@ -30,24 +30,9 @@ scheduler: {
     min_lr : 0.000001
 }}
 
-# optimizer : {
-#   type: AdamW,
-#   kwargs: {
-#   lr : 0.0005, 
-#   weight_decay : 0.05
-# }}
-
-# scheduler: {
-#   type: CosLR,
-#   kwargs: {
-#     epochs: 100,
-#     initial_epochs : 0,
-#     min_lr : 0.000001
-# }}
-
 
 dataset : {
-  train : { _base_: cfgs/dataset_configs/ModelNet40.yaml, 
+  train : { _base_: cfgs/dataset_configs/ShapeNet-55.yaml, 
             others: {subset: 'train','bs': 32}},
   mn40 : { _base_: cfgs/dataset_configs/ModelNet40.yaml, 
             others: {subset: 'test','bs': 32}},
