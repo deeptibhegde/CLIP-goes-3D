@@ -10,3 +10,5 @@ tensorboardX
 termcolor 
 yacs 
 easydict
+ninja
+opencv-python
