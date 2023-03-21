@@ -48,6 +48,7 @@ CUDA 11.6
 2. Build modified timm from scratch
 
    ```
+   extract modified timm package [here](https://drive.google.com/file/d/1LgF-cceG5GQGffPshFWQ3rL4gi8ws_Zl/view?usp=share_link) and place in ./models/SLIP/
    cd ./models/SLIP/pytorch-image-models
    pip install -e .
    ```
