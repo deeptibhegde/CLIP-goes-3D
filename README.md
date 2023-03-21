@@ -156,5 +156,20 @@ CUDA 11.6
   ```
   python eval.py --config {CONFIG} --exp_name {NAME FOR EXPT}  --ckpts {CKPT PATH} 
   ```
+  
+  
+  
+  
+# References
 
+ - [PointBert](https://github.com/lulutang0608/Point-BERT)
+ - [PointMLP](https://github.com/ma-xu/pointMLP-pytorch)
+ - [SLIP](https://github.com/facebookresearch/SLIP)
+ - [CLIP](https://github.com/openai/CLIP)
+ 
+
+To-Do:
+- [x] Model weights from pre-training
+- [ ] Model weights from fine-tuning
+- [x] Zero-shot inference
 
