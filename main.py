@@ -76,9 +76,8 @@ def main():
     if args.pretrain and args.visual_prompting:
         if args.scene:
             pretrain_CG3D_VPT_scanobjectnn(args, config, train_writer, val_writer)
-        pretrain_CG3D_VPT(args, config, train_writer, val_writer)
-    elif args.pretrain:
-        pretrain_CG3D(args, config, train_writer, val_writer)
+        else:
+            pretrain_CG3D_VPT(args, config, train_writer, val_writer)
     else:
         print("ERROR: Please include relevant tags.")
 
