@@ -14,7 +14,6 @@ from datasets import data_transforms
 from pointnet2_ops import pointnet2_utils
 from torchvision import transforms
 
-from pytorch3d.loss import chamfer_distance
 
 from models.PointMLP import pointMLPProject as pointMLP
 from models.PointConv import PointConvDensityClsSsgProject as PointConv

@@ -61,6 +61,4 @@ step_per_update : 1
 max_epoch : 100
 grad_norm_clip : 10
 
-ckpt: '/data/dhegde1/code/CLASP_pb/Point-BERT/PointMLP.pth'
-
 consider_metric: CDL1

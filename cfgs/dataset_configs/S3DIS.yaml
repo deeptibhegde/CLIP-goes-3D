@@ -1,4 +1,4 @@
 NAME: S3DIS
-DATA_PATH: /data/dhegde1/data/3D/
+DATA_PATH: /mnt/store/dhegde1/data/3D_datasets/
 N_POINTS: 8192
-PC_PATH: /data/dhegde1/data/3D/s3dis
+PC_PATH: /mnt/store/dhegde1/data/3D_datasets/s3dis

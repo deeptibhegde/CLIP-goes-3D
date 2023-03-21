@@ -164,8 +164,9 @@ class ModelNet(Dataset):
             fn = self.datapath[index]
             choice = np.random.randint(1,3,1)[0]
             # print(p)
-
-            img_root = "/data/dhegde1/data/3D/mn40_depth_views/"
+            root = self.root.split('/')
+            root = '/'.join(root[:-1])
+            img_root = os.path.join(root,"mn40_depth_views/")
             depth_list = []
             # for i in range(3):
             #     im = pil_loader(os.path.join(img_root,fn[0],fn[0] + '_%04d'%file_name,'view%d.png'%(i+1)))
@@ -197,7 +198,9 @@ class ModelNet(Dataset):
             # else:
             #     point_set = point_set[0:self.npoints, :]
 
-            img_root = "/data/dhegde1/data/3D/mn40_depth_views/"
+            root = self.root.split('/')
+            root = '/'.join(root[:-1])
+            img_root = os.path.join(root,"mn40_depth_views/")
             depth_list = []
             # for i in range(3):
             #     im = pil_loader(os.path.join(img_root,fn[0],fn[0] + '_%04d'%file_name,'view%d.png'%(i+1)))
