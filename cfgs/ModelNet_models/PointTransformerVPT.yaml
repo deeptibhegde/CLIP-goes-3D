@@ -30,7 +30,7 @@ scheduler: {
 }}
 
 dataset : {
-  train : { _base_: cfgs/dataset_configs/ModelNet40.yaml, 
+  train : { _base_: cfgs/dataset_configs/ShapeNet-55.yaml, 
             others: {subset: 'train','bs': 64}},
   mn40 : { _base_: cfgs/dataset_configs/ModelNet40.yaml, 
             others: {subset: 'test','bs': 64}},
