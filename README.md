@@ -121,6 +121,9 @@ CUDA 11.6
 ## Model weights
 
 
+Download SLIP model weights from [here](https://dl.fbaipublicfiles.com/slip/slip_base_100ep.pt).
+
+
 ### PointTransformer 
 -------------------------------------------------
 | No. of points | Model file  |Task| Configuration file |
@@ -147,14 +150,14 @@ CUDA 11.6
 - Pre-train PointTransformer on ShapeNet under the CG3D framework:
 
     ```
-    python main.py  --exp_name {NAME FOR EXPT} --config cfgs/ShapeNet55_models/PointTransformerVPT.yaml  --pretrain    --out_dir {OUTPUT DIR PATH}  --text --image --clip --VL SLIP --visual_prompting --npoints 1024
+    python main.py  --exp_name {NAME FOR EXPT} --config cfgs/ShapeNet55_models/PointTransformerVPT.yaml  --pretrain    --out_dir {OUTPUT DIR PATH}  --text --image --clip --VL SLIP --visual_prompting --npoints 1024 --slip_model {PATH TO SLIP MODEL}
 
     ```
     
 - Pre-train PointMLP on ShapeNet under the CG3D framework:
 
    ```
-   python main.py  --exp_name {NAME FOR EXPT} --config cfgs/ShapeNet55_models/PointMLP_VPT.yaml  --pretrain    --out_dir {OUTPUT DIR PATH}  --text --image --clip --VL SLIP --visual_prompting --npoints 1024
+   python main.py  --exp_name {NAME FOR EXPT} --config cfgs/ShapeNet55_models/PointMLP_VPT.yaml  --pretrain    --out_dir {OUTPUT DIR PATH}  --text --image --clip --VL SLIP --visual_prompting --npoints 1024 --slip_model {PATH TO SLIP MODEL}
 
     ```
 
@@ -174,7 +177,7 @@ CUDA 11.6
  - [SLIP](https://github.com/facebookresearch/SLIP)
  - [CLIP](https://github.com/openai/CLIP)
  - [Pointnet2_PyTorch](https://github.com/erikwijmans/Pointnet2_PyTorch)
- - 
+
  
 
 To-Do:
