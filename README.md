@@ -118,8 +118,8 @@ CUDA 11.6
 -------------------------------------------------
 | No. of points | Model file  |Task| Configuration file |
 | ----------- | ----------- |----------- | -------------------|
-|1024| [download](https://drive.google.com/file/d/14aFau0H5Zn4byH6ahq7_PI7xzBSL18Ao/view?usp=share_link) | Pre-training|[link](cfgs/ModelNet_models/PointTransformerVPT.yaml) |
-|8192| [download](https://drive.google.com/file/d/1L_BPO45_AQEroLSYXhaUbPNYEB1YBCFV/view?usp=share_link) | Pre-training|[link](cfgs/ModelNet_models/PointTransformerVPT.yaml) |
+|1024| [download](https://drive.google.com/file/d/14aFau0H5Zn4byH6ahq7_PI7xzBSL18Ao/view?usp=share_link) | Pre-training|[link](cfgs/ShapeNet55_models/PointTransformerVPT.yaml) |
+|8192| [download](https://drive.google.com/file/d/1L_BPO45_AQEroLSYXhaUbPNYEB1YBCFV/view?usp=share_link) | Pre-training|[link](cfgs/ShapeNet55_models/PointTransformerVPT.yaml) |
 
 
 ### PointMLP
@@ -127,8 +127,8 @@ CUDA 11.6
 -------------------------------------------------
 | No. of points | Model file  |Task| Configuration file |
 | ----------- | ----------- |----------- | -------------------|
-|1024| [download](https://drive.google.com/file/d/1V66h1iGbfY-KEYGyMzV_T2QbKYsZa5p9/view?usp=share_link) | Pre-training|[link](cfgs/ModelNet_models/PointMLP_VPT.yaml) |
-|8192| [download](https://drive.google.com/file/d/1NX0x1FRgnZrZiEdaIRcp_V6Enb6WZolX/view?usp=share_link) | Pre-training|[link](cfgs/ModelNet_models/PointMLP_VPT.yaml) |
+|1024| [download](https://drive.google.com/file/d/1V66h1iGbfY-KEYGyMzV_T2QbKYsZa5p9/view?usp=share_link) | Pre-training|[link](cfgs/ShapeNet55_models/PointMLP_VPT.yaml) |
+|8192| [download](https://drive.google.com/file/d/1NX0x1FRgnZrZiEdaIRcp_V6Enb6WZolX/view?usp=share_link) | Pre-training|[link](cfgs/ShapeNet55_models/PointMLP_VPT.yaml) |
 
 
 
@@ -140,14 +140,14 @@ CUDA 11.6
 - Pre-train PointTransformer on ShapeNet under the CG3D framework:
 
     ```
-    python main.py  --exp_name {NAME FOR EXPT} --config cfgs/PRETRAIN_models/PointTransformerVPT.yaml  --pretrain    --out_dir {OUTPUT DIR PATH}  --text --image --clip --VL SLIP --visual_prompting --npoints 1024
+    python main.py  --exp_name {NAME FOR EXPT} --config cfgs/ShapeNet55_models/PointTransformerVPT.yaml  --pretrain    --out_dir {OUTPUT DIR PATH}  --text --image --clip --VL SLIP --visual_prompting --npoints 1024
 
     ```
     
 - Pre-train PointMLP on ShapeNet under the CG3D framework:
 
    ```
-   python main.py  --exp_name {NAME FOR EXPT} --config cfgs/PRETRAIN_models/PointMLP_VPT.yaml  --pretrain    --out_dir {OUTPUT DIR PATH}  --text --image --clip --VL SLIP --visual_prompting --npoints 1024
+   python main.py  --exp_name {NAME FOR EXPT} --config cfgs/ShapeNet55_models/PointMLP_VPT.yaml  --pretrain    --out_dir {OUTPUT DIR PATH}  --text --image --clip --VL SLIP --visual_prompting --npoints 1024
 
     ```
 
