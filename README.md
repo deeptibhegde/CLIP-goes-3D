@@ -31,7 +31,7 @@ CUDA 11.6
    ```
 
    ``` 
-   pip install ftfy tqdm h5py geoopt einops open3d pyyaml regex tensorboardX termcolor yacs
+   pip install -r requirements.txt
 
    ```
    ```
