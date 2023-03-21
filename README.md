@@ -164,7 +164,7 @@ Download SLIP model weights from [here](https://dl.fbaipublicfiles.com/slip/slip
 ## Zero-Shot Inference
 
   ```
-  python eval.py --config {CONFIG} --exp_name {NAME FOR EXPT}  --ckpts {CKPT PATH} 
+  python eval.py --config {CONFIG} --exp_name {NAME FOR EXPT}  --ckpts {CKPT PATH} --slip_model {PATH TO SLIP MODEL}
   ```
   
   
