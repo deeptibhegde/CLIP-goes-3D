@@ -27,6 +27,7 @@ CUDA 11.6
 
    ```
    conda create -n cg3d
+   conda activate cg3d
    ```
 
    ``` 
