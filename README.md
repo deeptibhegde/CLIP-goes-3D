@@ -66,6 +66,7 @@ CUDA 11.6
    ```
    cd third_party/Pointnet2_PyTorch
    pip install -e .
+   pip install pointnet2_ops_lib/.
    ```
    
 4.  Install [PyGeM](https://mathlab.github.io/PyGeM/)
@@ -172,6 +173,8 @@ CUDA 11.6
  - [PointMLP](https://github.com/ma-xu/pointMLP-pytorch)
  - [SLIP](https://github.com/facebookresearch/SLIP)
  - [CLIP](https://github.com/openai/CLIP)
+ - [Pointnet2_PyTorch](https://github.com/erikwijmans/Pointnet2_PyTorch)
+ - 
  
 
 To-Do:
