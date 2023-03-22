@@ -8,7 +8,17 @@ Official code for the paper "CLIP goes 3D: Leveraging Prompt Tuning for Language
 
 This repository includes the pre-trained models, evaluation and training codes for pre-training, zero-shot, and fine-tuning experiments of CG3D. It is built on the [Point-BERT](https://github.com/lulutang0608/Point-BERT) codebase. Please see the end of this document for a full list of code references.
 
-## Environment set-up
+To-Do:
+- [x] Setup
+- [x] Model weights from pre-training
+- [x] Model weights from fine-tuning
+- [x] Pre-training CG3D
+- [x] Zero-shot inference
+- [ ] Fine-tuning CG3D
+- [ ] Retrieval
+- [ ] Open Scene Querying
+
+### Environment set-up
 
 The known working environment configuration is 
 
@@ -78,7 +88,7 @@ CUDA 11.6
    python setup.py install
    ```
 
-## Dataset set-up
+### Dataset set-up
 
 1. Download point cloud datasets for pre-training and fine-tuning.
 
@@ -120,8 +130,9 @@ CUDA 11.6
 
   ```  
   
-## Model weights
+## 1) Model weights
 
+### a) Pre-trained CG3D weights
 
 Download SLIP model weights from [here](https://dl.fbaipublicfiles.com/slip/slip_base_100ep.pt).
 
@@ -142,11 +153,33 @@ Download SLIP model weights from [here](https://dl.fbaipublicfiles.com/slip/slip
 |1024| [download](https://drive.google.com/file/d/1V66h1iGbfY-KEYGyMzV_T2QbKYsZa5p9/view?usp=share_link) | Pre-training|[link](cfgs/ShapeNet55_models/PointMLP_VPT.yaml) |
 |8192| [download](https://drive.google.com/file/d/1NX0x1FRgnZrZiEdaIRcp_V6Enb6WZolX/view?usp=share_link) | Pre-training|[link](cfgs/ShapeNet55_models/PointMLP_VPT.yaml) |
 
+#### Test Zero-Shot performance
 
-
+  ```
+  python eval.py --config {CONFIG} --exp_name {NAME FOR EXPT}  --ckpts {CKPT PATH} --slip_model {PATH TO SLIP MODEL}
+  ```
   
+### b) Fine-tuning model weights
 
-## Pre-training
+### PointTransformer
+
+|    Dataset   |                                     Model Weights                                    |                                          TFBoard                                          |
+|:------------:|:------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------:|
+| ScanObjectNN | [download](https://drive.google.com/drive/folders/1qCtzrPulUK4gtPm4WGtIY_cNrfzTJSoN?usp=sharing) |             [link](https://tensorboard.dev/experiment/wWu7pF14Sd6dmUzu1Pah7Q/#scalars)            |
+|   ModelNet   | [download](https://drive.google.com/drive/folders/16BfhaKWKUVr7e1xVb5llVQr6UkrnBBeF?usp=sharing) | [link](https://tensorboard.dev/experiment/yKmx71h3RwyDd2udvpaMZw/#scalars&_smoothingWeight=0.548) |
+
+### PointMLP
+
+|    Dataset   |                                     Model Weights                                    |                           TFBoard                          |
+|:------------:|:------------------------------------------------------------------------------------:|:----------------------------------------------------------:|
+| ScanObjectNN | [download](https://drive.google.com/drive/folders/1VWdDafCm3KNkA3V_nOND6E1wweQYCT3X?usp=sharing) | [link](https://tensorboard.dev/experiment/Puw4RvPqS1CrKHVma20f4g/) |
+|   ModelNet   | [download](https://drive.google.com/drive/folders/1xgGkt2aOFCCG_qX0SqHoUAwHnvMg6vqF?usp=sharing) | [link](https://tensorboard.dev/experiment/k8q6cMhQSj6tkSVDJ8jkag/) |
+
+
+## 2) Training CG3D
+
+### a) Pre-training
+
 - Change data paths to relevant locations in ```cfgs/dataset_configs/```
 
 - Pre-train PointTransformer on ShapeNet under the CG3D framework:
@@ -163,16 +196,17 @@ Download SLIP model weights from [here](https://dl.fbaipublicfiles.com/slip/slip
 
     ```
 
-## Zero-Shot Inference
+### Zero-Shot Inference
 
   ```
   python eval.py --config {CONFIG} --exp_name {NAME FOR EXPT}  --ckpts {CKPT PATH} --slip_model {PATH TO SLIP MODEL}
   ```
+
   
   
   
   
-# References
+### References
 
  - [PointBert](https://github.com/lulutang0608/Point-BERT)
  - [PointMLP](https://github.com/ma-xu/pointMLP-pytorch)
@@ -182,8 +216,5 @@ Download SLIP model weights from [here](https://dl.fbaipublicfiles.com/slip/slip
 
  
 
-To-Do:
-- [x] Model weights from pre-training
-- [ ] Model weights from fine-tuning
-- [x] Zero-shot inference
+
 
