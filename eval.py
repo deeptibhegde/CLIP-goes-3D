@@ -114,13 +114,11 @@ def main():
 
     start_epoch = 0
     # build dataset
-    (train_sampler, train_dataloader), (_, test_dataloader),\
+    
     (_, MN40_dataloader,mn40_classes),(_, MN10_dataloader,mn10_classes),\
-     (_, scan_dataloader,scan_classes)= builder.dataset_builder_clasp(args, config.dataset.train,real=args.real), \
-                                                            builder.dataset_builder_clasp(args, config.dataset.train,train=False,real=args.real), \
-                                                            builder.dataset_builder(args, config.dataset.mn40), \
-                                                            builder.dataset_builder(args, config.dataset.mn10), \
-                                                            builder.dataset_builder(args, config.dataset.scan) 
+     (_, scan_dataloader,scan_classes)= builder.dataset_builder(args, config.dataset.mn40), \
+                                        builder.dataset_builder(args, config.dataset.mn10), \
+                                        builder.dataset_builder(args, config.dataset.scan) 
 
 
     (_, extra_train_dataloader)  = builder.dataset_builder(args, config.dataset.extra_train) if config.dataset.get('extra_train') else (None, None)
@@ -259,17 +257,13 @@ def validate_ZS(args,base_model,clip_model, test_dataloader,text_validation,val_
     acc_count_sh = [0]*len(val_classes)
     base_model.eval()
 
-    latent_point_all = []
-    labels_all = []
 
     for idx, (taxonomy_ids, model_ids, data) in enumerate(test_dataloader):
-        
-        # img = img.cuda().float()
-        # import pdb; pdb.set_trace()
+
         
         points = data[0].to(args.local_rank)
         points = misc.fps(points,args.npoints)
-        # import pdb; pd.set_trace()
+
         
         label = data[1]
 
@@ -278,9 +272,9 @@ def validate_ZS(args,base_model,clip_model, test_dataloader,text_validation,val_
         
         batch_size = points.shape[0]
                     
-        # import pdb; pdb.set_trace()
+
         with torch.no_grad():
-            # latent_img = clip_model.encode_image(img).float()
+
             if base_model.__class__.__name__ == 'ModelProject':
                 latent_point = base_model(points.permute(0,2,1).contiguous())
             else:
@@ -291,18 +285,12 @@ def validate_ZS(args,base_model,clip_model, test_dataloader,text_validation,val_
             ## GET TEXT FEATURES OF CAPTIONS
             text_features = clip_model.encode_text(text_validation)
 
-            latent_img = clip_model.encode_image(im)
-
-            # import pdb; pdb.set_trace()    
+   
             # normalize features
             latent_point = (latent_point / latent_point.norm(dim=-1, keepdim=True))
-            latent_img = (latent_img / latent_img.norm(dim=-1, keepdim=True))
-            latent_point_all.append(latent_img)
-            labels_all.append(label)
-            # text_features = text_features / text_features.norm(dim=-1, keepdim=True)  
+            text_features = text_features / text_features.norm(dim=-1, keepdim=True)  
 
 
-            # import pdb; pdb.set_trace()
 
 
 
@@ -313,7 +301,7 @@ def validate_ZS(args,base_model,clip_model, test_dataloader,text_validation,val_
 
             probs = logits_per_image.softmax(dim=-1).cpu().numpy()
 
-            # import pdb; pdb.set_trace()
+
 
 
             for i in range(len(probs)):
@@ -328,23 +316,17 @@ def validate_ZS(args,base_model,clip_model, test_dataloader,text_validation,val_
                 overall_count_sh += 1
                 acc_count_sh[label[i]] += 1 
     
-    latent_point_all = torch.cat(latent_point_all,dim=0).detach().cpu().numpy()
-    labels_all = torch.cat(labels_all).detach().cpu().numpy()
+    
 
     acc_sh = np.mean(np.array(acc_sh))
     overall_acc_sh /= overall_count_sh
 
-    # print_log('[MN40 Validation] EPOCH: %d  acc = %.4f' % (epoch,overall_acc_sh), logger=logger)
+
 
     if args.distributed:
         torch.cuda.synchronize()
 
-    # Add testing results to TensorBoard
-    if val_writer is not None:
-        if len(val_classes) == 40:
-            val_writer.add_scalar('Metric/ACC_MN40', overall_acc_sh, epoch)
-        else:
-            val_writer.add_scalar('Metric/ACC_MN10', overall_acc_sh, epoch)
+
 
 
 

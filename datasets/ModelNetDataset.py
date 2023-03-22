@@ -77,6 +77,8 @@ class ModelNet(Dataset):
         self.split = split
         self.subset = config.subset
 
+        self.image = config.DEPTH
+
         if self.num_category == 10:
             self.catfile = os.path.join(self.root, 'modelnet10_shape_names.txt')
         else:
@@ -119,12 +121,6 @@ class ModelNet(Dataset):
                     cls = np.array([cls]).astype(np.int32)
                     point_set = np.loadtxt(fn[1], delimiter=',').astype(np.float32)
 
-                    # if self.uniform:
-                    #     point_set = farthest_point_sample(point_set, self.npoints)
-                        
-                    #     # point_set = misc.fps(point_set, self.npoints)
-                    # else:
-                    #     point_set = point_set[0:self.npoints, :]
 
                     self.list_of_points[index] = point_set
                     self.list_of_labels[index] = cls
@@ -162,23 +158,19 @@ class ModelNet(Dataset):
             
             point_set, label, file_name = self.list_of_points[index], self.list_of_labels[index],self.list_of_filenames[index]
             fn = self.datapath[index]
-            choice = np.random.randint(1,3,1)[0]
-            # print(p)
-            root = self.root.split('/')
-            root = '/'.join(root[:-1])
-            img_root = os.path.join(root,"mn40_depth_views/")
-            depth_list = []
-            # for i in range(3):
-            #     im = pil_loader(os.path.join(img_root,fn[0],fn[0] + '_%04d'%file_name,'view%d.png'%(i+1)))
-            #     im = self.transform(im)[:3]
-            #     depth_list.append(im)
 
-            i = 0
-            im = pil_loader(os.path.join(img_root,fn[0],fn[0] + '_%04d'%file_name,'view%d.png'%(i+1)))
-            im = self.transform(im)[:3]
-                
-            # else:
-            #     point_set, label = self.list_of_points[index], self.list_of_labels[index]
+            if self.image:
+                root = self.root.split('/')
+                root = '/'.join(root[:-1])
+                img_root = os.path.join(root,"mn40_depth_views/")
+
+
+                i = 0
+                im = pil_loader(os.path.join(img_root,fn[0],fn[0] + '_%04d'%file_name,'view%d.png'%(i+1)))
+                im = self.transform(im)[:3]
+            else:
+                im = torch.tensor(0.0)        
+            
         else:
             fn = self.datapath[index]
 
@@ -193,23 +185,19 @@ class ModelNet(Dataset):
 
             file_name = np.array(file_name.replace(fn[0] + '_','')).astype(np.int32)
             
-            # if self.uniform:
-            #     point_set = farthest_point_sample(point_set, self.npoints)
-            # else:
-            #     point_set = point_set[0:self.npoints, :]
 
-            root = self.root.split('/')
-            root = '/'.join(root[:-1])
-            img_root = os.path.join(root,"mn40_depth_views/")
-            depth_list = []
-            # for i in range(3):
-            #     im = pil_loader(os.path.join(img_root,fn[0],fn[0] + '_%04d'%file_name,'view%d.png'%(i+1)))
-            #     im = self.transform(im)[:3]
-            #     depth_list.append(im)
 
-            i = 0
-            im = pil_loader(os.path.join(img_root,fn[0],fn[0] + '_%04d'%file_name,'view%d.png'%(i+1)))
-            im = self.transform(im)[:3]
+            if self.image:
+                root = self.root.split('/')
+                root = '/'.join(root[:-1])
+                img_root = os.path.join(root,"mn40_depth_views/")
+
+
+                i = 0
+                im = pil_loader(os.path.join(img_root,fn[0],fn[0] + '_%04d'%file_name,'view%d.png'%(i+1)))
+                im = self.transform(im)[:3]
+            else:
+                im = torch.tensor(0.0)   
                 
         point_set[:, 0:3] = pc_normalize(point_set[:, 0:3])
         if not self.use_normals:

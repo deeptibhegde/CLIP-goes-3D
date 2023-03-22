@@ -2,6 +2,6 @@ NAME: ModelNet
 DATA_PATH: /mnt/store/dhegde1/data/3D_datasets/modelnet40_normal_resampled
 N_POINTS: 8192
 NUM_CATEGORY: 40
-DEPTH: True
-PROCESS: False
+DEPTH: False
+PROCESS: True
 USE_NORMALS: FALSE
