@@ -16,7 +16,6 @@ To-Do:
 - [x] Zero-shot inference
 - [ ] Fine-tuning CG3D
 - [ ] Retrieval
-- [ ] Open Scene Querying
 
 ### Environment set-up
 
