@@ -97,37 +97,39 @@ CUDA 11.6
 
     Save and unzip the above datasets.
   
- 2. Render views of textured CAD models of ShapeNet using [this](https://github.com/nv-tlabs/GET3D/blob/master/render_shapenet_data/README.md) repository such that the data is organized as 
+ 2. Render views of textured CAD models of ShapeNet using [this](https://github.com/nv-tlabs/GET3D/blob/master/render_shapenet_data/README.md) repository. We use a scale of 0.7 and 5 total views. 
+ 
+ 3. The data should be organized as 
 
-  ```
-  ├── data (this may be wherever you choose)
-  │   ├── modelnet40_normal_resampled
-  │   │   │── modelnet10/40_shape_names.txt
-  │   │   │── modelnet10/40_train/test.txt 
-  │   │   │── airplane
-  │   │   │── ...
-  │   │   │── laptop 
-  │   ├── ShapeNet55
-  │   │   │── train.txt
-  │   │   │── test.txt
-  │   │   │── shapenet_pc
-  │   │   │   |── 03211117-62ac1e4559205e24f9702e673573a443.npy
-  │   │   │   |── ...
-  │   ├── shapenet_render
-  │   │   │── train_img.txt
-  │   │   │── val_img.txt
-  │   │   │── shape_names.txt
-  │   │   │── taxonomy.json
-  │   │   │── camera
-  │   │   │── img
-  │   │   │   |── 02691156
-  │   │   │   |── ...
-  │   ├── ScanObjectNN
-  │   │   │── main_split
-  │   │   │── ...
-  
+   ```
+   ├── data (this may be wherever you choose)
+   │   ├── modelnet40_normal_resampled
+   │   │   │── modelnet10/40_shape_names.txt
+   │   │   │── modelnet10/40_train/test.txt 
+   │   │   │── airplane
+   │   │   │── ...
+   │   │   │── laptop 
+   │   ├── ShapeNet55
+   │   │   │── train.txt
+   │   │   │── test.txt
+   │   │   │── shapenet_pc
+   │   │   │   |── 03211117-62ac1e4559205e24f9702e673573a443.npy
+   │   │   │   |── ...
+   │   ├── shapenet_render
+   │   │   │── train_img.txt
+   │   │   │── val_img.txt
+   │   │   │── shape_names.txt
+   │   │   │── taxonomy.json
+   │   │   │── camera
+   │   │   │── img
+   │   │   │   |── 02691156
+   │   │   │   |── ...
+   │   ├── ScanObjectNN
+   │   │   │── main_split
+   │   │   │── ...
 
-  ```  
+
+   ```  
   
 ## 1) Model weights
 
