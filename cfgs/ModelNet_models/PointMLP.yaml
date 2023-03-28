@@ -1,8 +1,9 @@
 optimizer : {
-  type: AdamW,
+  type: SGD,
   kwargs: {
-  lr : 0.0005, 
-  weight_decay : 0.05
+  lr : 0.02, 
+  weight_decay : 0.0002,
+  momentum : 0.9
 }}
 
 scheduler: {
@@ -10,18 +11,18 @@ scheduler: {
   kwargs: {
     epochs: 300,
     initial_epochs : 10,
-    min_lr : 0.000001
+    min_lr : 0.005
 }}
 
 dataset : {
-  train : { _base_: cfgs/dataset_configs/ScanObjectNN_hardest.yaml, 
+  train : { _base_: cfgs/dataset_configs/ModelNet.yaml, 
             others: {subset: 'train',bs : 32}},
-  val : { _base_: cfgs/dataset_configs/ScanObjectNN_hardest.yaml, 
+  val : { _base_: cfgs/dataset_configs/ModelNet.yaml, 
             others: {subset: 'test',bs : 32}},
-  test : { _base_: cfgs/dataset_configs/ScanObjectNN_hardest.yaml, 
+  test : { _base_: cfgs/dataset_configs/ModelNet.yaml, 
             others: {subset: 'test',bs : 32}}}
 model : {
-  NAME: PointTransformer,
+  NAME: PointMLP,
   trans_dim: 384, 
   depth: 12, 
   drop_path_rate: 0.1, 
@@ -37,5 +38,5 @@ step_per_update : 1
 max_epoch : 300
 grad_norm_clip : 10
 
-
+ckpt: '/data/dhegde1/code/CLASP_pb/Point-BERT/PointMLP.pth'
 consider_metric: CDL1

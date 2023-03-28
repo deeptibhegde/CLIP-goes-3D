@@ -201,18 +201,23 @@ def main():
 
     # TEST ###########################################################################
 
-    overall_acc_MN40, class_wise_acc_MN40, metrics_MN40 = validate_ZS(args,base_model,clip_model,MN40_dataloader,mn40_text_validation,mn40_classes,val_writer,start_epoch,logger,config)
-    print_log("{{MODELNET40 overall accuracy: %.3f}}"%overall_acc_MN40,logger = logger) 
-    print_log("{{MODELNET40 class-wise mean Accuracy: %.3f}}"%class_wise_acc_MN40,logger = logger)
+    if args.zhot:
+
+        overall_acc_MN40, class_wise_acc_MN40, metrics_MN40 = validate_ZS(args,base_model,clip_model,MN40_dataloader,mn40_text_validation,mn40_classes,val_writer,start_epoch,logger,config)
+        print_log("{{MODELNET40 overall accuracy: %.3f}}"%overall_acc_MN40,logger = logger) 
+        print_log("{{MODELNET40 class-wise mean Accuracy: %.3f}}"%class_wise_acc_MN40,logger = logger)
 
 
-    overall_acc_MN10, class_wise_acc_MN10, metrics_MN10 = validate_ZS(args,base_model,clip_model,MN10_dataloader,mn10_text_validation,mn10_classes,val_writer,start_epoch,logger,config)
-    print_log("{{MODELNET10 overall accuracy: %.3f}}"%overall_acc_MN10,logger = logger) 
-    print_log("{{MODELNET10 class-wise mean Accuracy: %.3f}}"%class_wise_acc_MN10,logger = logger)
+        overall_acc_MN10, class_wise_acc_MN10, metrics_MN10 = validate_ZS(args,base_model,clip_model,MN10_dataloader,mn10_text_validation,mn10_classes,val_writer,start_epoch,logger,config)
+        print_log("{{MODELNET10 overall accuracy: %.3f}}"%overall_acc_MN10,logger = logger) 
+        print_log("{{MODELNET10 class-wise mean Accuracy: %.3f}}"%class_wise_acc_MN10,logger = logger)
 
-    overall_acc_scan, class_wise_acc_scan, metrics_scan = validate_ZS(args,base_model,clip_model,scan_dataloader,scan_text_validation,scan_classes,val_writer,start_epoch,logger,config)
-    print_log("{{ScanObjectNN overall accuracy: %.3f}}"%overall_acc_scan,logger = logger) 
-    print_log("{{ScanObjectNN class-wise mean Accuracy: %.3f}}"%class_wise_acc_scan,logger = logger)
+        overall_acc_scan, class_wise_acc_scan, metrics_scan = validate_ZS(args,base_model,clip_model,scan_dataloader,scan_text_validation,scan_classes,val_writer,start_epoch,logger,config)
+        print_log("{{ScanObjectNN overall accuracy: %.3f}}"%overall_acc_scan,logger = logger) 
+        print_log("{{ScanObjectNN class-wise mean Accuracy: %.3f}}"%class_wise_acc_scan,logger = logger)
+    
+    else:
+        cls_acc = validate(base_model,MN40_dataloader, val_writer, args, config)
 
 
 
@@ -334,7 +339,7 @@ def validate_ZS(args,base_model,clip_model, test_dataloader,text_validation,val_
 
 
 
-def validate(base_model, test_dataloader, epoch, val_writer, args, config, logger = None):
+def validate(base_model, test_dataloader, val_writer, args, config, logger = None):
     base_model.eval()  # set model to eval mode
 
     test_pred  = []
@@ -361,21 +366,11 @@ def validate(base_model, test_dataloader, epoch, val_writer, args, config, logge
         test_pred = torch.cat(test_pred, dim=0)
         test_label = torch.cat(test_label, dim=0)
 
-        if args.distributed:
-            test_pred = dist_utils.gather_tensor(test_pred, args)
-            test_label = dist_utils.gather_tensor(test_label, args)
-
         acc = (test_pred == test_label).sum() / float(test_label.size(0)) * 100.
-        print_log('[Validation] EPOCH: %d  acc = %.4f' % (epoch, acc), logger=logger)
 
-        if args.distributed:
-            torch.cuda.synchronize()
 
     # Add testing results to TensorBoard
-    if val_writer is not None:
-        val_writer.add_scalar('Metric/ACC', acc, epoch)
-
-    return Acc_Metric(acc)
+    return acc
     
 
 if __name__ == '__main__':

@@ -68,6 +68,11 @@ def get_args():
         default=False, 
         help = 'pointcloud recon')
     parser.add_argument(
+        '--zshot', 
+        action='store_true', 
+        default=False, 
+        help = 'pointcloud recon')
+    parser.add_argument(
         '--pretrain', 
         action='store_true', 
         default=False, 
