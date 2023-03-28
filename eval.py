@@ -12,7 +12,8 @@ from pointnet2_ops import pointnet2_utils
 from torchvision import transforms
 
 
-from models.PointMLP import pointMLPProject as pointMLP
+from models.PointMLP import pointMLPProject 
+from models.PointMLP import pointMLP 
 
 
 from tensorboardX import SummaryWriter
@@ -114,16 +115,17 @@ def main():
 
     start_epoch = 0
     # build dataset
-    
-    (_, MN40_dataloader,mn40_classes),(_, MN10_dataloader,mn10_classes),\
-     (_, scan_dataloader,scan_classes)= builder.dataset_builder(args, config.dataset.mn40), \
-                                        builder.dataset_builder(args, config.dataset.mn10), \
-                                        builder.dataset_builder(args, config.dataset.scan) 
+    if args.zshot:
+        (_, MN40_dataloader,mn40_classes),(_, MN10_dataloader,mn10_classes),\
+        (_, scan_dataloader,scan_classes)= builder.dataset_builder(args, config.dataset.mn40), \
+                                            builder.dataset_builder(args, config.dataset.mn10), \
+                                            builder.dataset_builder(args, config.dataset.scan) 
 
 
-    (_, extra_train_dataloader)  = builder.dataset_builder(args, config.dataset.extra_train) if config.dataset.get('extra_train') else (None, None)
-    
-    
+        (_, extra_train_dataloader)  = builder.dataset_builder(args, config.dataset.extra_train) if config.dataset.get('extra_train') else (None, None)
+        
+    else:
+        (_, test_dataloader, _)= builder.dataset_builder(args, config.dataset.val)    
 
 
     ## MODEL DEF ########################################################################
@@ -131,77 +133,79 @@ def main():
     # import pdb; pdb.set_trace()
 
     if config.model.NAME == 'PointMLP':
-        base_model = pointMLP()
+        if args.zshot:
+            base_model = pointMLPProject()
+        else:
+            base_model = pointMLP()
         base_model.load_model_from_ckpt(base_model,args.ckpts)
     else:
         base_model = builder.model_builder(config.model)
         base_ckpt = torch.load(args.ckpts)
-        # base_ckpt = {k.replace("blocks.", ""): v for k, v in base_ckpt['base_model'].items()}
-        # checkpoint = torch.load(args.ckpts)['base_model']
-        base_model.load_state_dict(base_ckpt['base_model'])
+        base_ckpt = {k.replace("module.", ""): v for k, v in base_ckpt['base_model'].items()}
+        base_model.load_state_dict(base_ckpt)
         print("Loaded model from ",args.ckpts)
         # base_model.load_model_from_ckpt(args.ckpts)
 
     base_model.to(args.local_rank)
 
+    clip_mode = None
+    if args.zshot:
+        if args.VL == 'CLIP':
+            clip_model, preprocess = clip.load("RN50x16",device=args.local_rank,jit=False)
 
-    
-    if args.VL == 'CLIP':
-        clip_model, preprocess = clip.load("RN50x16",device=args.local_rank,jit=False)
+        elif args.VL == 'SLIP':
+            # import pdb; pdb.set_trace()
+            
+            clip_model = getattr(slip_models, args.slip_model_name)(ssl_mlp_dim=args.ssl_mlp_dim, ssl_emb_dim=args.ssl_emb_dim).to(args.local_rank)
+            pretrained_slip = torch.load(args.slip_model)
+            temp = {}
+            for key,value in pretrained_slip['state_dict'].items():
+                k = key.replace("module.","")
+                temp[k] = value
 
-    elif args.VL == 'SLIP':
-        # import pdb; pdb.set_trace()
+            
+            clip_model.load_state_dict(temp,strict=False)
+            clip_dict = torch.load(args.ckpts)['visual_clip_model']
+            clip_model.visual.load_state_dict(clip_dict)
+        clip_model.to(args.local_rank)
+        # PREP FOR TESTING ################################################################
         
-        clip_model = getattr(slip_models, args.slip_model_name)(ssl_mlp_dim=args.ssl_mlp_dim, ssl_emb_dim=args.ssl_emb_dim).to(args.local_rank)
-        pretrained_slip = torch.load(args.slip_model)
-        temp = {}
-        for key,value in pretrained_slip['state_dict'].items():
-            k = key.replace("module.","")
-            temp[k] = value
+        f = open(os.path.join(args.dataset_root,"shapenet_render/shape_names.txt"))
+        val_classes = f.readlines()
+        for i in range(len(val_classes)):
+            val_classes[i] = val_classes[i][:-1]
 
-        
-        clip_model.load_state_dict(temp,strict=False)
-        clip_dict = torch.load(args.ckpts)['visual_clip_model']
-        clip_model.visual.load_state_dict(clip_dict)
-    clip_model.to(args.local_rank)
-    # PREP FOR TESTING ################################################################
-    
-    f = open(os.path.join(args.dataset_root,"shapenet_render/shape_names.txt"))
-    val_classes = f.readlines()
-    for i in range(len(val_classes)):
-        val_classes[i] = val_classes[i][:-1]
+        texts_validation = []
+        for c in val_classes:
+            texts_validation.append(args.text_prompt + c)
 
-    texts_validation = []
-    for c in val_classes:
-        texts_validation.append(args.text_prompt + c)
-
-    text_validation = clip.tokenize(texts_validation).to(args.local_rank)
+        text_validation = clip.tokenize(texts_validation).to(args.local_rank)
 
 
-    mn40_texts_validation = []
-    for c in mn40_classes.keys():
-        mn40_texts_validation.append(args.text_prompt + c)
+        mn40_texts_validation = []
+        for c in mn40_classes.keys():
+            mn40_texts_validation.append(args.text_prompt + c)
 
-    mn40_text_validation = clip.tokenize(mn40_texts_validation).to(args.local_rank)
+        mn40_text_validation = clip.tokenize(mn40_texts_validation).to(args.local_rank)
 
-    mn10_texts_validation = []
-    for c in mn10_classes.keys():
-        mn10_texts_validation.append(args.text_prompt + c)
+        mn10_texts_validation = []
+        for c in mn10_classes.keys():
+            mn10_texts_validation.append(args.text_prompt + c)
 
-    mn10_text_validation = clip.tokenize(mn10_texts_validation).to(args.local_rank)
+        mn10_text_validation = clip.tokenize(mn10_texts_validation).to(args.local_rank)
 
 
-    scan_texts_validation = []
-    for c in scan_classes.keys():
-        scan_texts_validation.append(args.text_prompt + c)
+        scan_texts_validation = []
+        for c in scan_classes.keys():
+            scan_texts_validation.append(args.text_prompt + c)
 
-    scan_text_validation = clip.tokenize(scan_texts_validation).to(args.local_rank)
+        scan_text_validation = clip.tokenize(scan_texts_validation).to(args.local_rank)
 
-    ########################################################################################
+        ########################################################################################
 
-    # TEST ###########################################################################
+        # TEST ###########################################################################
 
-    if args.zhot:
+   
 
         overall_acc_MN40, class_wise_acc_MN40, metrics_MN40 = validate_ZS(args,base_model,clip_model,MN40_dataloader,mn40_text_validation,mn40_classes,val_writer,start_epoch,logger,config)
         print_log("{{MODELNET40 overall accuracy: %.3f}}"%overall_acc_MN40,logger = logger) 
@@ -217,7 +221,8 @@ def main():
         print_log("{{ScanObjectNN class-wise mean Accuracy: %.3f}}"%class_wise_acc_scan,logger = logger)
     
     else:
-        cls_acc = validate(base_model,MN40_dataloader, val_writer, args, config)
+        cls_acc = validate(base_model,test_dataloader, val_writer, args, config)
+        print("{{Overall classification accuracy: %.3f}}"%cls_acc)
 
 
 
@@ -261,25 +266,24 @@ def validate_ZS(args,base_model,clip_model, test_dataloader,text_validation,val_
     acc_sh = [0]*len(val_classes)
     acc_count_sh = [0]*len(val_classes)
     base_model.eval()
-
-
     for idx, (taxonomy_ids, model_ids, data) in enumerate(test_dataloader):
-
+        
+        # img = img.cuda().float()
+        # import pdb; pdb.set_trace()
         
         points = data[0].to(args.local_rank)
         points = misc.fps(points,args.npoints)
-
+        
+        # import pdb; pd.set_trace()
         
         label = data[1]
-
-        im = data[2].cuda()
        
         
         batch_size = points.shape[0]
                     
-
+        # import pdb; pdb.set_trace()
         with torch.no_grad():
-
+            # latent_img = clip_model.encode_image(img).float()
             if base_model.__class__.__name__ == 'ModelProject':
                 latent_point = base_model(points.permute(0,2,1).contiguous())
             else:
@@ -290,12 +294,13 @@ def validate_ZS(args,base_model,clip_model, test_dataloader,text_validation,val_
             ## GET TEXT FEATURES OF CAPTIONS
             text_features = clip_model.encode_text(text_validation)
 
-   
+                
             # normalize features
             latent_point = (latent_point / latent_point.norm(dim=-1, keepdim=True))
-            text_features = text_features / text_features.norm(dim=-1, keepdim=True)  
+            # text_features = text_features / text_features.norm(dim=-1, keepdim=True)  
 
 
+            # import pdb; pdb.set_trace()
 
 
 
@@ -306,7 +311,7 @@ def validate_ZS(args,base_model,clip_model, test_dataloader,text_validation,val_
 
             probs = logits_per_image.softmax(dim=-1).cpu().numpy()
 
-
+            # import pdb; pdb.set_trace()
 
 
             for i in range(len(probs)):
@@ -320,18 +325,23 @@ def validate_ZS(args,base_model,clip_model, test_dataloader,text_validation,val_
                     overall_acc_sh += 1
                 overall_count_sh += 1
                 acc_count_sh[label[i]] += 1 
-    
-    
+
+    for i in range(len(acc_sh)): acc_sh[i] /= acc_count_sh[i]
 
     acc_sh = np.mean(np.array(acc_sh))
     overall_acc_sh /= overall_count_sh
 
-
+    # print_log('[MN40 Validation] EPOCH: %d  acc = %.4f' % (epoch,overall_acc_sh), logger=logger)
 
     if args.distributed:
         torch.cuda.synchronize()
 
-
+    # Add testing results to TensorBoard
+    if val_writer is not None:
+        if len(val_classes) == 40:
+            val_writer.add_scalar('Metric/ACC_MN40', overall_acc_sh, epoch)
+        else:
+            val_writer.add_scalar('Metric/ACC_MN10', overall_acc_sh, epoch)
 
 
 

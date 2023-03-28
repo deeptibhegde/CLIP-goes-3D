@@ -377,7 +377,7 @@ def resume_model(base_model, args, logger = None):
     # parameter resume of base model
     # if args.local_rank == 0:
     base_ckpt = {k.replace("module.", ""): v for k, v in state_dict['base_model'].items()}
-    base_ckpt = {k: v for k, v in base_ckpt.items() if "cls_head_finetune" not in k }
+    # base_ckpt = {k: v for k, v in base_ckpt.items() if "cls_head_finetune" not in k }
     base_model.load_state_dict(base_ckpt, strict = False)
 
     # parameter

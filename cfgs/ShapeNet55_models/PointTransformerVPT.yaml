@@ -54,15 +54,7 @@ model : {
   num_group: 64, 
   encoder_dims: 256,
 
-  dvae_config : {
-    group_size: 32, 
-    num_group: 64, 
-    encoder_dims: 256,
-    num_tokens: 8192,
-    tokens_dims: 256, 
-    decoder_dims: 256, 
-    ckpt: '/data/dhegde1/code/CLASP_pb/Point-BERT/dVAE.pth' # set the dVAE weight here
-  }
+
 }
 npoints: 8192
 total_bs : 64

@@ -332,9 +332,10 @@ class Model(nn.Module):
         )
 
     def load_model_from_ckpt(self,model,ckpt_path):
+        # import pdb; pdb.set_trace()
         checkpoint = torch.load(ckpt_path)
         base_ckpt = {k.replace("module.", ""): v for k, v in checkpoint['base_model'].items()}
-        model.load_state_dict(base_ckpt,strict=False)
+        model.load_state_dict(base_ckpt)
         print("Loaded model from ",ckpt_path)
         return model
 
@@ -437,7 +438,7 @@ class ModelFuse(nn.Module):
     def load_model_from_ckpt(self,model,ckpt_path):
         checkpoint = torch.load(ckpt_path)
         base_ckpt = {k.replace("module.", ""): v for k, v in checkpoint['base_model'].items()}
-        model.load_state_dict(base_ckpt,strict=False)
+        model.load_state_dict(base_ckpt)
         print("Loaded model from ",ckpt_path)
         return model
 
@@ -566,7 +567,7 @@ class ModelProject(nn.Module):
         checkpoint = torch.load(ckpt_path)
         # import pdb; pdb.set_trace()
         base_ckpt = {k.replace("module.", ""): v for k, v in checkpoint['base_model'].items()}
-        model.load_state_dict(base_ckpt,strict=False)
+        model.load_state_dict(base_ckpt)
         print("Loaded model from ",ckpt_path)
         return model
 
