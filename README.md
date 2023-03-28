@@ -14,6 +14,7 @@ To-Do:
 - [x] Model weights from fine-tuning
 - [x] Pre-training CG3D
 - [x] Zero-shot inference
+- [x] Fine-tune inference
 - [ ] Fine-tuning CG3D
 - [ ] Retrieval
 
@@ -200,8 +201,14 @@ Download SLIP model weights from [here](https://dl.fbaipublicfiles.com/slip/slip
 ### Zero-Shot Inference
 
   ```
-  python eval.py --config {CONFIG} --exp_name {NAME FOR EXPT}  --ckpts {CKPT PATH} --slip_model {PATH TO SLIP MODEL}
+  python eval.py --config cfgs/ShapeNet55_models/{CONFIG} --exp_name {NAME FOR EXPT}  --ckpts {CKPT PATH} --slip_model {PATH TO SLIP MODEL} --zshot --npoints {1024,8192}
   ```
+  
+ ### Fine-tuning Inference
+
+ ```
+ python eval.py --config  cfgs/{ModelNet_models,ScanObjectNN_models}/{CONFIG} --exp_name {NAME FOR EXPT}  --ckpts {CKPT PATH} --npoints {1024,8192}
+ ```
 
   
   
