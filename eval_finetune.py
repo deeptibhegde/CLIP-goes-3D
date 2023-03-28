@@ -334,48 +334,256 @@ def validate_ZS(args,base_model,clip_model, test_dataloader,text_validation,val_
 
 
 
-def validate(base_model, test_dataloader, epoch, val_writer, args, config, logger = None):
-    base_model.eval()  # set model to eval mode
-
-    test_pred  = []
-    test_label = []
+def validate_MN40Fuse(args,base_model,clip_model, test_dataloader,text_validation,val_classes_dict,val_writer,epoch,logger,config):
+    overall_acc_sh = 0
+    overall_count_sh = 0
     npoints = config.npoints
-    with torch.no_grad():
-        for idx, (taxonomy_ids, model_ids, data) in enumerate(test_dataloader):
-            points = data[0].cuda()
-            label = data[1].cuda()
-
-            points = misc.fps(points, npoints)
-
-            if config.model.NAME == 'PointMLP' or config.model.NAME == 'PointConv':
-                logits = base_model(points.permute(0,2,1).contiguous())
+    # val_classes = val_classes.keys()
+    val_classes = [key for key in val_classes_dict]
+    # import pdb; pdb.set_trace()
+    acc_sh = [0]*len(val_classes)
+    acc_count_sh = [0]*len(val_classes)
+    base_model.eval()
+    for idx, (taxonomy_ids, model_ids, data) in enumerate(test_dataloader):
+        
+        # img = img.cuda().float()
+        
+        
+        points = data[0].to(args.local_rank)
+        points = misc.fps(points,args.npoints)
+        
+        label = data[1]
+        
+        img = data[2].cuda()
+        
+        batch_size = points.shape[0]
+                    
+        # import pdb; pdb.set_trace()
+        with torch.no_grad():
+            # latent_img = clip_model.encode_image(img).float()
+            if base_model.__class__.__name__ == 'ModelProject':
+                latent_point = base_model(points.permute(0,2,1).contiguous())
             else:
-                logits = base_model(points)
-            target = label.view(-1)
+                ret, latent_point, _ = base_model(points)
 
-            pred = logits.argmax(-1).view(-1)
+            
+            
 
-            test_pred.append(pred.detach())
-            test_label.append(target.detach())
+            ## GET TEXT FEATURES OF CAPTIONS
+            text_features = clip_model.encode_text(text_validation)
 
-        test_pred = torch.cat(test_pred, dim=0)
-        test_label = torch.cat(test_label, dim=0)
+            bs = latent_point.shape[0]
+            nc = text_features.shape[0]
 
-        if args.distributed:
-            test_pred = dist_utils.gather_tensor(test_pred, args)
-            test_label = dist_utils.gather_tensor(test_label, args)
+            logits_fuse = torch.zeros((bs,nc)).cuda()
 
-        acc = (test_pred == test_label).sum() / float(test_label.size(0)) * 100.
-        print_log('[Validation] EPOCH: %d  acc = %.4f' % (epoch, acc), logger=logger)
+            prob_img = []
 
-        if args.distributed:
-            torch.cuda.synchronize()
+            for i in range(3):
+                latent_img = clip_model.encode_image(img[:,i,:,:])
+                latent_img = latent_img / latent_img.norm(dim=-1, keepdim=True)  
+
+                
+                logits_per_image =  latent_img @ text_features.t().float()
+
+                prob_img.append(logits_per_image.softmax(dim=-1).cpu().numpy())
+                logits_fuse += logits_per_image
+
+            
+            # normalize features
+            latent_point = (latent_point / latent_point.norm(dim=-1, keepdim=True))
+            text_features = text_features / text_features.norm(dim=-1, keepdim=True)  
+            
+           
+            logit_scale = clip_model.logit_scale.exp()
+            logits_per_pts = logit_scale * latent_point @ text_features.t().float()
+            logits_per_text = logits_per_pts.t()
+
+            # probs_point = logits_per_pts.softmax(dim=-1).cpu().numpy()
+
+            # compute image/text similarity
+            
+
+            # probs_image = logits_per_image.softmax(dim=-1).cpu().numpy()
+            prob_img = np.array(prob_img)
+            probs_point = logits_per_pts.softmax(dim=-1)
+            probs_point = probs_point.unsqueeze(dim=0).cpu().numpy()
+            probs = np.concatenate((prob_img[:2],probs_point),axis=0)
+            # probs = probs.max(axis=0)
+            probs_args = np.argmax(probs,axis=-1)
+
+            import pdb; pdb.set_trace()
+
+
+            # probs = prob_img[2]            
+            
+            # logits_fuse = logit_scale * fuse_features @ text_features.t().float()
+
+            
+
+
+            # probs = logits_fuse.softmax(dim=-1).cpu().numpy()
+
+
+
+
+            for i in range(len(probs)):
+
+                
+                
+                ind = np.argmax(probs[i])
+                prediction = val_classes[ind]
+                if prediction == val_classes[label[i]]:                        
+                    acc_sh[label[i]] += 1
+                    overall_acc_sh += 1
+                overall_count_sh += 1
+                acc_count_sh[label[i]] += 1 
+
+    for i in range(len(acc_sh)): acc_sh[i] /= acc_count_sh[i]
+
+    acc_sh = np.mean(np.array(acc_sh))
+    overall_acc_sh /= overall_count_sh
+
+    # print_log('[MN40 Validation] EPOCH: %d  acc = %.4f' % (epoch,overall_acc_sh), logger=logger)
+
+    if args.distributed:
+        torch.cuda.synchronize()
 
     # Add testing results to TensorBoard
     if val_writer is not None:
-        val_writer.add_scalar('Metric/ACC', acc, epoch)
+        if len(val_classes) == 40:
+            val_writer.add_scalar('Metric/ACC_MN40', overall_acc_sh, epoch)
+        else:
+            val_writer.add_scalar('Metric/ACC_MN10', overall_acc_sh, epoch)
 
-    return Acc_Metric(acc)
+
+
+    return overall_acc_sh, acc_sh, Acc_Metric(overall_acc_sh)
+
+
+def validate_MN40Image(args,base_model,clip_model, test_dataloader,text_validation,val_classes_dict,val_writer,epoch,logger,config):
+    overall_acc_sh = 0
+    overall_count_sh = 0
+    npoints = config.npoints
+    # val_classes = val_classes.keys()
+    val_classes = [key for key in val_classes_dict]
+    # import pdb; pdb.set_trace()
+    acc_sh = [0]*len(val_classes)
+    acc_count_sh = [0]*len(val_classes)
+    base_model.eval()
+    for idx, (taxonomy_ids, model_ids, data) in enumerate(test_dataloader):
+        
+        # img = img.cuda().float()
+        
+        
+        points = data[0].to(args.local_rank)
+        # points_raw = points.to(args.local_rank)
+        # if npoints == 1024:
+        #     point_all = 1200
+        # elif npoints == 2048:
+        #     point_all = 2400
+        # elif npoints == 4096:
+        #     point_all = 4800
+        # elif npoints == 8192:
+        #     point_all = 8192
+        # else:
+        #     raise NotImplementedError()
+            
+        # if points_raw.size(1) < point_all:
+        #     point_all = points_raw.size(1)
+
+        # fps_idx_raw = pointnet2_utils.furthest_point_sample(points_raw, point_all)  # (B, npoint)
+
+        # fps_idx = fps_idx_raw[:, np.random.choice(point_all, npoints, False)]
+        # points = pointnet2_utils.gather_operation(points_raw.transpose(1, 2).contiguous(), 
+        #                                         fps_idx).transpose(1, 2).contiguous()  # (B, N, 3)
+
+        # points = test_transforms(points)
+        
+        label = data[1]
+        
+        img = data[2][:,1,:,:].cuda()
+        
+        batch_size = points.shape[0]
+                    
+        # import pdb; pdb.set_trace()
+        with torch.no_grad():
+            # latent_img = clip_model.encode_image(img).float()
+            if base_model.__class__.__name__ == 'ModelProject':
+                latent_point = base_model(points.permute(0,2,1).contiguous())
+            else:
+                ret, latent_point, _ = base_model(points)
+
+            
+            latent_img = clip_model.encode_image(img)
+
+            ## GET TEXT FEATURES OF CAPTIONS
+            text_features = clip_model.encode_text(text_validation)
+
+                
+            # normalize features
+            latent_point = (latent_point / latent_point.norm(dim=-1, keepdim=True))
+            text_features = text_features / text_features.norm(dim=-1, keepdim=True)  
+            latent_img = latent_img / latent_img.norm(dim=-1, keepdim=True)  
+
+
+
+            # import pdb; pdb.set_trace()
+
+
+
+            # # compute point/text similarity
+            # logit_scale = clip_model.logit_scale.exp()
+            # logits_per_pts = logit_scale * latent_point @ text_features.t().float()
+            # logits_per_text = logits_per_pts.t()
+
+            # probs_point = logits_per_pts.softmax(dim=-1).cpu().numpy()
+
+            # compute image/text similarity
+            logit_scale = clip_model.logit_scale.exp()
+            logits_per_image = logit_scale * latent_img @ text_features.t().float()
+            logits_per_text = logits_per_image.t()
+
+            probs_image = logits_per_image.softmax(dim=-1).cpu().numpy()
+
+            # import pdb; pdb.set_trace()
+
+
+            probs = probs_image
+
+            for i in range(len(probs)):
+
+                
+
+                ind = np.argmax(probs[i])
+                prediction = val_classes[ind]
+                if prediction == val_classes[label[i]]:                        
+                    acc_sh[label[i]] += 1
+                    overall_acc_sh += 1
+                overall_count_sh += 1
+                acc_count_sh[label[i]] += 1 
+
+    for i in range(len(acc_sh)): acc_sh[i] /= acc_count_sh[i]
+
+    acc_sh = np.mean(np.array(acc_sh))
+    overall_acc_sh /= overall_count_sh
+
+    # print_log('[MN40 Validation] EPOCH: %d  acc = %.4f' % (epoch,overall_acc_sh), logger=logger)
+
+    if args.distributed:
+        torch.cuda.synchronize()
+
+    # Add testing results to TensorBoard
+    if val_writer is not None:
+        if len(val_classes) == 40:
+            val_writer.add_scalar('Metric/ACC_MN40', overall_acc_sh, epoch)
+        else:
+            val_writer.add_scalar('Metric/ACC_MN10', overall_acc_sh, epoch)
+
+
+
+    return overall_acc_sh, acc_sh, Acc_Metric(overall_acc_sh)
+
     
 
 if __name__ == '__main__':

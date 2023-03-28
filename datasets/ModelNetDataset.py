@@ -103,9 +103,9 @@ class ModelNet(Dataset):
         print_log('The size of %s data is %d' % (split, len(self.datapath)), logger = 'ModelNet')
 
         if self.uniform:
-            self.save_path = os.path.join(self.root, 'modelnet%d_%s_%dpts_fps2.dat' % (self.num_category, split, self.npoints))
+            self.save_path = os.path.join(self.root, 'modelnet%d_%s_%dpts_fps.dat' % (self.num_category, split, self.npoints))
         else:
-            self.save_path = os.path.join(self.root, 'modelnet%d_%s_%dpts2.dat' % (self.num_category, split, self.npoints))
+            self.save_path = os.path.join(self.root, 'modelnet%d_%s_%dpts.dat' % (self.num_category, split, self.npoints))
 
         if self.process_data:
             if not os.path.exists(self.save_path):
@@ -131,12 +131,12 @@ class ModelNet(Dataset):
                     self.list_of_filenames[index] = np.array(file_name.replace(fn[0] + '_','')).astype(np.int32)
 
                 with open(self.save_path, 'wb') as f:
-                    pickle.dump([self.list_of_points, self.list_of_labels,self.list_of_filenames], f)
+                    pickle.dump([self.list_of_points, self.list_of_labels], f)
             else:
                 print_log('Load processed data from %s...' % self.save_path, logger = 'ModelNet')
                 with open(self.save_path, 'rb') as f:
                     
-                    self.list_of_points, self.list_of_labels,self.list_of_filenames = pickle.load(f)
+                    self.list_of_points, self.list_of_labels = pickle.load(f)
                     
 
         self.transform = transforms.Compose([
@@ -156,7 +156,7 @@ class ModelNet(Dataset):
         
             
             
-            point_set, label, file_name = self.list_of_points[index], self.list_of_labels[index],self.list_of_filenames[index]
+            point_set, label = self.list_of_points[index], self.list_of_labels[index]
             fn = self.datapath[index]
 
             if self.image:

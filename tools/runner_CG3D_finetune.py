@@ -82,27 +82,20 @@ def run_net(args, config, train_writer=None, val_writer=None):
         if args.ckpts is not None:
             # import pdb; pdb.set_trace()
             if config.model.NAME == 'PointMLP':
+
                 base_model.load_model_from_ckpt(base_model,args.ckpts)
             else:
-                if args.clip:
-                    checkpoint = torch.load(args.ckpts)
-                    base_ckpt = {k.replace("module.", ""): v for k, v in checkpoint['base_model'].items()}
-                    ckpt = {k:v for k,v in base_ckpt.items() if 'cls_head_finetune' not in k}
-                    base_model.load_state_dict(ckpt,strict=False)
-                    print("Loaded model from ",args.ckpts)
 
-                    if args.visual_prompting:
-                        for k, p in base_model.named_parameters():
-                            if "prompt" not in k:
-                                p.requires_grad = False
-                            else:
-                                print(k)
-
-
-
-                else:
-
-                    base_model.load_model_from_ckpt(args.ckpts)
+                base_ckpt = torch.load(args.ckpts)
+                base_ckpt_ = {}
+                for k,v in base_ckpt['base_model'].items():
+                    if 'cls_head_finetune' not in k:
+                        base_ckpt_[k] = v
+                # base_ckpt = {k.replace("blocks.", ""): v for k, v in base_ckpt['base_model'].items()}
+                # checkpoint = torch.load(args.ckpts)['base_model']
+                base_model.load_state_dict(base_ckpt_,strict=False)
+                print("Loaded model from ",args.ckpts)
+                # base_model.load_model_from_ckpt(args.ckpts)
         else:
             print_log('Training from scratch', logger = logger)
 
