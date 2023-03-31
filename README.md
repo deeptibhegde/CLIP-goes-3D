@@ -14,6 +14,7 @@ To-Do:
 - [x] Model weights from fine-tuning
 - [x] Pre-training CG3D
 - [x] Zero-shot inference
+- [x] Fine-tune inference
 - [ ] Fine-tuning CG3D
 - [ ] Retrieval
 
@@ -64,7 +65,7 @@ CUDA 11.6
 
 2. Build modified timm from scratch
 
-   extract modified timm package [here](https://drive.google.com/file/d/10ETHew_P3vGUA2HbvSZ9wxf3EmtoFmQ3/view?usp=share_link) and place in ./models/SLIP/
+   extract modified timm package [here](https://drive.google.com/file/d/1YHhhnPFS1j9500WXiJBq0AXFyQYqpZ35/view?usp=share_link) and place in ./models/SLIP/
 
 
    ```
@@ -200,8 +201,14 @@ Download SLIP model weights from [here](https://dl.fbaipublicfiles.com/slip/slip
 ### Zero-Shot Inference
 
   ```
-  python eval.py --config {CONFIG} --exp_name {NAME FOR EXPT}  --ckpts {CKPT PATH} --slip_model {PATH TO SLIP MODEL}
+  python eval.py --config cfgs/ShapeNet55_models/{CONFIG} --exp_name {NAME FOR EXPT}  --ckpts {CKPT PATH} --slip_model {PATH TO SLIP MODEL} --zshot --npoints {1024,8192}
   ```
+  
+ ### Fine-tuning Inference
+
+ ```
+ python eval.py --config  cfgs/{ModelNet_models,ScanObjectNN_models}/{CONFIG} --exp_name {NAME FOR EXPT}  --ckpts {CKPT PATH} --npoints {1024,8192}
+ ```
 
   
   
