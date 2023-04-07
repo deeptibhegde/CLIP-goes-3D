@@ -158,7 +158,7 @@ Download SLIP model weights from [here](https://dl.fbaipublicfiles.com/slip/slip
 #### Test Zero-Shot performance
 
   ```
-  python eval.py --config {CONFIG} --exp_name {NAME FOR EXPT}  --ckpts {CKPT PATH} --slip_model {PATH TO SLIP MODEL}
+    python eval.py --config cfgs/ShapeNet55_models/{CONFIG} --exp_name {NAME FOR EXPT}  --ckpts {CKPT PATH} --slip_model {PATH TO SLIP MODEL} --zshot --npoints {1024,8192}
   ```
   
 ### b) Fine-tuning model weights
