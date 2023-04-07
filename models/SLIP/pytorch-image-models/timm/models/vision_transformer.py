@@ -1678,7 +1678,7 @@ def _create_vision_transformer(variant, pretrained=False,visual_prompting=True, 
                 **kwargs,
             )
     else:
-        raaise NotImplementedError("Invalid")
+        raise NotImplementedError("Invalid")
 
     
 
