@@ -480,8 +480,8 @@ def SIMCLR_VITB16(**kwargs):
     return model
 
 
-def SLIP_VITB16(visual_prompting=False,num_classes=40,**kwargs):
-    vision_model = timm.create_model('vit_base_patch16_224', num_classes=0,visual_prompting=visual_prompting)
+def SLIP_VITB16(num_classes=40,**kwargs):
+    vision_model = timm.create_model('vit_base_patch16_224', num_classes=0)
     cls_head_finetune = nn.Sequential(
             nn.Linear(512, 256),
             nn.ReLU(inplace=True),

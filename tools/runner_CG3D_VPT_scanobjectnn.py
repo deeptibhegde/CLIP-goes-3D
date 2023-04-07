@@ -114,7 +114,7 @@ def run_net(args, config, train_writer=None, val_writer=None):
 
         # DEFAULT
         elif args.VL == 'SLIP':
-            clip_model = slip_models.SLIP_VITB16(visual_prompting=args.visual_prompting,ssl_mlp_dim=args.ssl_mlp_dim, ssl_emb_dim=args.ssl_emb_dim).to(args.local_rank)
+            clip_model = slip_models.SLIP_VITB16(ssl_mlp_dim=args.ssl_mlp_dim, ssl_emb_dim=args.ssl_emb_dim).to(args.local_rank)
             if args.visual_prompting:
                 for k, p in clip_model.named_parameters():
                     if "prompt" not in k:

@@ -1,0 +1,10 @@
+# ninja log v5
+2	16086	1680901516212667025	/mnt/store/dhegde1/code/CG3D/check_git_3/CLIP-goes-3D/third_party/Pointnet2_PyTorch/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/interpolate.o	75bba2fc2cc08750
+2	16216	1680901516360663733	/mnt/store/dhegde1/code/CG3D/check_git_3/CLIP-goes-3D/third_party/Pointnet2_PyTorch/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/group_points.o	b707683208e786f2
+1	16642	1680901516764654745	/mnt/store/dhegde1/code/CG3D/check_git_3/CLIP-goes-3D/third_party/Pointnet2_PyTorch/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/ball_query.o	d0cd4389fb0215a3
+1	17402	1680901517532637662	/mnt/store/dhegde1/code/CG3D/check_git_3/CLIP-goes-3D/third_party/Pointnet2_PyTorch/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/sampling.o	e1ef3d2c708d8c98
+2	21347	1680901521472550050	/mnt/store/dhegde1/code/CG3D/check_git_3/CLIP-goes-3D/third_party/Pointnet2_PyTorch/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/bindings.o	21b2297011efbeea
+2	28353	1680901528452394956	/mnt/store/dhegde1/code/CG3D/check_git_3/CLIP-goes-3D/third_party/Pointnet2_PyTorch/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/group_points_gpu.o	233829d6e5564c2f
+2	28474	1680901528576392202	/mnt/store/dhegde1/code/CG3D/check_git_3/CLIP-goes-3D/third_party/Pointnet2_PyTorch/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/interpolate_gpu.o	ea5c206c02607a5
+1	29446	1680901529564370262	/mnt/store/dhegde1/code/CG3D/check_git_3/CLIP-goes-3D/third_party/Pointnet2_PyTorch/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/ball_query_gpu.o	952cdee4683711ae
+3	31740	1680901531884318753	/mnt/store/dhegde1/code/CG3D/check_git_3/CLIP-goes-3D/third_party/Pointnet2_PyTorch/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-38/pointnet2_ops/_ext-src/src/sampling_gpu.o	69397e63f7a17682

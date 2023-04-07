@@ -1,0 +1,25 @@
+Metadata-Version: 2.1
+Name: pygem
+Version: 2.0.0
+Summary: Python Geometrical Morphing.
+Home-page: https://github.com/mathLab/PyGeM
+Author: Marco Tezzele, Nicola Demo
+Author-email: marcotez@gmail.com, demo.nicola@gmail.com
+License: MIT
+Keywords: dimension_reduction mathematics ffd morphing iges stl vtk openfoam
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Scientific/Engineering :: Mathematics
+Provides-Extra: docs
+Provides-Extra: test
+License-File: LICENSE.rst
+
+PyGeM is a python package using Free Form Deformation, Radial Basis Functions and Inverse Distance Weighting to parametrize and morph complex geometries. It is ideally suited for actual industrial problems, since it allows to handle:
+1) Computer Aided Design files (in .iges, .step, and .stl formats) Mesh files (in .unv and OpenFOAM formats)
+2) Output files (in .vtk format)
+3) LS-Dyna Keyword files (.k format).
+
+By now, it has been used with meshes with up to 14 milions of cells. Try with more and more complicated input files! See the Examples section below and the Tutorials to have an idea of the potential of this package.

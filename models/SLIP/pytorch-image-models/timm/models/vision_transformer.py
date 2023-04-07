@@ -1660,7 +1660,7 @@ default_cfgs = generate_default_cfgs({
 })
 
 
-def _create_vision_transformer(variant, pretrained=False,visual_prompting=True, **kwargs):
+def _create_vision_transformer(variant, pretrained=False, **kwargs):
     if kwargs.get('features_only', None):
         raise RuntimeError('features_only not implemented for Vision Transformer models.')
 
@@ -1671,14 +1671,13 @@ def _create_vision_transformer(variant, pretrained=False,visual_prompting=True, 
     else:
         _filter_fn = checkpoint_filter_fn
 
-    if visual_prompting:
-        return build_model_with_cfg(
-                VisionTransformerPromptDeep, variant, pretrained,
-                pretrained_filter_fn=_filter_fn,
-                **kwargs,
-            )
-    else:
-        raise NotImplementedError("Invalid")
+
+    return build_model_with_cfg(
+            VisionTransformerPromptDeep, variant, pretrained,
+            pretrained_filter_fn=_filter_fn,
+            **kwargs,
+        )
+
 
     
 
@@ -1768,12 +1767,12 @@ def vit_base_patch32_384(pretrained=False, **kwargs):
 
 
 @register_model
-def vit_base_patch16_224(pretrained=False,visual_prompting=False, **kwargs):
+def vit_base_patch16_224(pretrained=False, **kwargs):
     """ ViT-Base (ViT-B/16) from original paper (https://arxiv.org/abs/2010.11929).
     ImageNet-1k weights fine-tuned from in21k @ 224x224, source https://github.com/google-research/vision_transformer.
     """
     model_kwargs = dict(patch_size=16, embed_dim=768, depth=12, num_heads=12)
-    model = _create_vision_transformer('vit_base_patch16_224', pretrained=pretrained,visual_prompting=visual_prompting, **dict(model_kwargs, **kwargs))
+    model = _create_vision_transformer('vit_base_patch16_224', pretrained=pretrained, **dict(model_kwargs, **kwargs))
     return model
 
 

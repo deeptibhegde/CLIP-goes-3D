@@ -38,7 +38,7 @@ def safe_model_name(model_name, remove_source=True):
 def create_model(
         model_name: str,
         pretrained: bool = False,
-        visual_prompting: bool = False,
+        
         pretrained_cfg: Optional[Union[str, Dict[str, Any], PretrainedCfg]] = None,
         pretrained_cfg_overlay:  Optional[Dict[str, Any]] = None,
         checkpoint_path: str = '',
@@ -93,7 +93,6 @@ def create_model(
     with set_layer_config(scriptable=scriptable, exportable=exportable, no_jit=no_jit):
         model = create_fn(
             pretrained=pretrained,
-            visual_prompting=visual_prompting,
             pretrained_cfg=pretrained_cfg,
             pretrained_cfg_overlay=pretrained_cfg_overlay,
             **kwargs,
