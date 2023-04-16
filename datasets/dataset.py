@@ -133,7 +133,6 @@ class ShapenetCG3D(data.Dataset):
 
         self.real_caption = args.real_caption
 
-        self.depth = args.depth
 
         f = open(os.path.join(self.dataset_root,"shapenet_render/shape_names.txt"))
 
@@ -195,14 +194,12 @@ class ShapenetCG3D(data.Dataset):
             img_file_path = os.path.join(self.dataset_root,"shapenet_render/img",taxonomy_id,model_id,'%03d.png'%view)
 
             choice = np.random.randint(1,3,1)[0]
-            depth_img_file_path = os.path.join(self.dataset_root,"shapenet_depth_views",taxonomy_id,model_id,'view%d.png'%choice)
 
             self.file_list.append({
                 'taxonomy_id': taxonomy_id,
                 'model_id': model_id,
                 'file_path': line,
                 'img_file_path': img_file_path,
-                'depth_img_file_path': depth_img_file_path,
             })
         if not train:
             self.file_list = self.file_list[:3000]
@@ -254,25 +251,12 @@ class ShapenetCG3D(data.Dataset):
 
         points = IO.get(os.path.join(self.dataset_root,'ShapeNet55/shapenet_pc', sample['file_path'])).astype(np.float32)
 
-        # points = self.random_sample(points, self.sample_points_num)
         sample_size = random.choice(self.sample_sizes)
-        # points = self.farthest_point_sample(points,self.sample_points_num)
-        # points = self.farthest_point_sample(points,sample_size)
+
         points = self.pc_norm(points)
 
         #augmentations
         prob = self.prob
-        # severity = 3
-        # corruptions = [c for c in MAP.keys()]
-        # corruption = random.choice(corruptions)
-        # for corruption in MAP.keys():
-        #     if np.random.uniform(0,1) < self.prob:
-        #         points = MAP[corruption](points,severity)
-                # print(points.shape)
-
-        # points = MAP[corruption](points,severity)
-
-
 
         index = np.random.choice(points.shape[0],self.npoints)
 
@@ -329,9 +313,6 @@ class ShapenetCG3D(data.Dataset):
 
             
 
-            depth_im = pil_loader(sample['depth_img_file_path'])
-            depth_im = self.transform(depth_im)[:3]
-
         else:
             
 
@@ -347,12 +328,11 @@ class ShapenetCG3D(data.Dataset):
                 im = pil_loader(sample['img_file_path'])
                 im = self.transform(im)[:3]
 
-            depth_im = pil_loader(sample['depth_img_file_path'])
-            depth_im = self.transform(depth_im)[:3]
+            
 
             
 
-        return 0, 0, points, (im,depth_im),caption, class_name, int(self.classes.index(class_name))
+        return 0, 0, points, (im,im),caption, class_name, int(self.classes.index(class_name))
 
     def __len__(self):
         return len(self.file_list)
