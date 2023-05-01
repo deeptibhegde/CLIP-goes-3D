@@ -335,7 +335,7 @@ class Model(nn.Module):
         # import pdb; pdb.set_trace()
         checkpoint = torch.load(ckpt_path)
         base_ckpt = {k.replace("module.", ""): v for k, v in checkpoint['base_model'].items()}
-        model.load_state_dict(base_ckpt)
+        model.load_state_dict(base_ckpt, strict=False)
         print("Loaded model from ",ckpt_path)
         return model
 

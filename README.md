@@ -15,7 +15,7 @@ To-Do:
 - [x] Pre-training CG3D
 - [x] Zero-shot inference
 - [x] Fine-tune inference
-- [ ] Fine-tuning CG3D
+- [x] Fine-tuning CG3D
 - [ ] Retrieval
 
 ### Environment set-up
@@ -209,9 +209,24 @@ Download SLIP model weights from [here](https://dl.fbaipublicfiles.com/slip/slip
  ```
 
   
+### b) Fine-tuning
+
+#### Finetuning PointTransformer:
+
+ ```
+ CUBLAS_WORKSPACE_CONFIG=:4096:8 CUDA_VISIBLE_DEVICES=0 python finetune_cg3d.py --config cfgs/ModelNet_models/PointTransformer.yaml --exp_name {NAME OF EXPT} --finetune_model --ckpts {PATH OF PRETRAINED MODEL WEIGHTS} --dataset_root {PATH OF DATA STORAGE}
+ ```
   
+#### Finetuning PointMLP:
+
+```
+ CUBLAS_WORKSPACE_CONFIG=:4096:8 CUDA_VISIBLE_DEVICES=0 python finetune_cg3d.py --config cfgs/ModelNet_models/PointMLP.yaml --exp_name {NAME OF EXPT} --finetune_model --ckpts {PATH OF PRETRAINED MODEL WEIGHTS} --dataset_root {PATH OF DATA STORAGE}
+ ```
+
   
-  
+Please change the .yml files to change the finetuning dataset from ModelNet to ScanObjectNN, etc.
+
+
 ### References
 
  - [PointBert](https://github.com/lulutang0608/Point-BERT)
@@ -222,5 +237,15 @@ Download SLIP model weights from [here](https://dl.fbaipublicfiles.com/slip/slip
 
  
 
+### Citation
+
+ ```
+ @article{hegde2023clip,
+  title={CLIP goes 3D: Leveraging Prompt Tuning for Language Grounded 3D Recognition},
+  author={Hegde, Deepti and Valanarasu, Jeya Maria Jose and Patel, Vishal M},
+  journal={arXiv preprint arXiv:2303.11313},
+  year={2023}
+}
+ ```
 
 

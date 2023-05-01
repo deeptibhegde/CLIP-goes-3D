@@ -244,7 +244,7 @@ class PointTransformer(nn.Module):
 
 
     def load_model_from_ckpt(self, bert_ckpt_path):
-        ckpt = torch.load(bert_ckpt_path)
+        ckpt = torch.load(bert_ckpt_path, strict=False)
         base_ckpt = {k.replace("module.", ""): v for k, v in ckpt['base_model'].items()}
         for k in list(base_ckpt.keys()):
             if k.startswith('transformer_q') and not k.startswith('transformer_q.cls_head'):
